@@ -15,25 +15,31 @@ class field {
     this.field[0][0] = pathCharacter;
   }
 
-  // initailising the game 
-  game(){
-    let playing = true;
-    while (playing){
-    this.print() // print field
-    this.ask()  // prompt question every round
-        if (this.hatLocation()){
-          console.log('Congrates, You found the Hat!!!')
-          playing = false
-          break
-        }else if (this.holeLocation()){
-          console.log('Oops you fall into the hole, please try again')
-          playing = false
-          break
-        }else if (!this.insidePlayingField()){
-          console.log('you are outside of the playing field, please try again')
-          playing = false
-          break
-        }
+//set direction keys
+ask() {
+  const direction = prompt('Please select the direction? (W=up)/(A=left)/(D=right)/(S=down)/(Q=quit game) ').toUpperCase();
+    switch(direction) {
+    case 'W':
+      this.yAxis -= 1;
+      break;
+    case 'S':
+      this.yAxis += 1;
+      break;
+    case 'A':
+      this.xAxis -= 1;
+      break;
+    case 'D':
+      this.xAxis += 1;
+      break;
+    case 'Q':
+      console.log('You have exited the game')
+      process.exit()
+    default:
+    this.ask();
+    break;
+   }
+  }
+
     // update position of pathcharacter every round
     this.field[this.yAxis][this.xAxis] = pathCharacter
   } 

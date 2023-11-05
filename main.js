@@ -109,8 +109,56 @@ ask() {
     field[setHatLocation.y][setHatLocation.x] = hat;
     return field
   }
+  findShortestPath() {
+    const visited = new Set();
+    const queue = [{ x: 0, y: 0, path: [] }];
+
+    while (queue.length > 0) {
+      const current = queue.shift();
+      const { x, y, path } = current;
+
+      if (this.field[y][x] === hat) {
+        return path;
+      }
+
+      visited.add(`${x},${y}`);
+
+      // Define possible moves (up, down, left, right)
+      const moves = [
+        { dx: 0, dy: -1, direction: 'up' },
+        { dx: 0, dy: 1, direction: 'down' },
+        { dx: -1, dy: 0, direction: 'left' },
+        { dx: 1, dy: 0, direction: 'right' },
+      ];
+
+      for (const move of moves) {
+        const newX = x + move.dx;
+        const newY = y + move.dy;
+
+        if (
+          newX >= 0 &&
+          newY >= 0 &&
+          newX < this.field[0].length &&
+          newY < this.field.length &&
+          this.field[newY][newX] !== hole &&
+          !visited.has(`${newX},${newY}`)
+        ) {
+          queue.push({ x: newX, y: newY, path: [...path, move.direction] });
+        }
+      }
+    }
+
+    return null; // No path found
+  }
 }
+
 
 // set field size and Initialise game 
 const myNewField = new field(field.createField(10, 10));
 myNewField.game();
+const shortestPath = myNewField.findShortestPath();
+if (shortestPath) {
+  console.log('Shortest path to the hat:', shortestPath.join(' -> '));
+} else {
+  console.log('No path to the hat found.');
+}
